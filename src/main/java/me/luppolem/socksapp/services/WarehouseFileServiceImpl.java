@@ -80,17 +80,17 @@ public class WarehouseFileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStreamResource exportTxtFile(Map<Integer, Warehouse> recipeMap) throws FileNotFoundException, IOException {
+    public InputStreamResource exportTxtFile(Map<Integer, Warehouse> warehouseMap) throws FileNotFoundException, IOException {
         Path path = this.createAllWarehouseFile("allWarehouse");
         for (Warehouse warehouse : warehouseMap.values()) {
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
                 writer.append(" Цвет носков: ");
-                writer.append(warehouse.getColor());
+                writer.append(String.valueOf(warehouse.getSocks().getColor()));
                 writer.append("\n Размер носков: ");
-                writer.append(String.valueOf(warehouse.getSize()));
+                writer.append(String.valueOf(warehouse.getSocks().getSize()));
                 writer.append(" ");
                 writer.append("\n Процентное содержание хлопка: ");
-                writer.append(String.valueOf(warehouse.getCottonPart()));
+                writer.append(String.valueOf(warehouse.getSocks().getCottonPart()));
                 writer.append("\n Количество носков: ");
                 writer.append(String.valueOf(warehouse.getQuantity()));
             }

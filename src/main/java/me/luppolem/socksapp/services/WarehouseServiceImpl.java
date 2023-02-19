@@ -39,7 +39,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public Warehouse getWarehouse(Integer id) {
         if (!warehouseMap.containsKey(id)) {
-            throw new NotFoundException("рецепт с заданным id не найден");
+            throw new NotFoundException("носки на складе с заданным id не найдены");
         }
         return warehouseMap.get(id);
     }
@@ -52,7 +52,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public Warehouse removeWarehouse(int id) {
         if (!warehouseMap.containsKey(id)) {
-            throw new NotFoundException("рецепт с заданным id не найден");
+            throw new NotFoundException("носки на складе с заданным id не найдены");
         }
         Warehouse removedWarehouse = warehouseMap.remove(id);
         saveToFileWarehouse();

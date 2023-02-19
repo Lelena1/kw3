@@ -12,12 +12,8 @@ import javax.validation.constraints.Positive;
 @ToString
 public class Warehouse {
 
-    @NotEmpty(message = "Color is mandatory")
-    private Color color;
-    @NotEmpty(message = "Size is mandatory")
-    private Size size;
-    @Positive
-    private int cottonPart;
+    @NotEmpty(message = "All fields are mandatory")
+   private Socks socks;
     @Positive
     private int quantity;
 
