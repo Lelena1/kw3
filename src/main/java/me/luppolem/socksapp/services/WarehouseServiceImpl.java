@@ -25,8 +25,13 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.fileService = fileService;
     }
 
-    public Map<Integer, Warehouse> getWarehouseMap() {
-        return warehouseMap;
+    @Override
+    public Map<Integer, Warehouse> getWarehouseMap(Integer id) {
+        if (!warehouseMap.containsKey(id)) {
+            throw new NotFoundException("носки с заданным id на складе не найдены");
+        }
+
+        return (Map<Integer, Warehouse>) warehouseMap.get(id);
     }
 
     @Override
@@ -37,11 +42,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Warehouse getWarehouse(Integer id) {
+    public Integer getWarehouseInfoAboutQuantityOfSocKs() {
+        int quantityOfSocks = 0;
         if (!warehouseMap.containsKey(id)) {
             throw new NotFoundException("носки на складе с заданным id не найдены");
+        } else {
+            warehouseMap.get(id).getSocks().getCottonPart().;
         }
-        return warehouseMap.get(id);
+        return
     }
 
     @Override

@@ -18,4 +18,5 @@ public class Socks {
     @Positive
     private int cottonPart;
 
+
 }

@@ -10,7 +10,8 @@ public interface SocksService {
 
     Socks getSocks(Integer id);
 
-    Collection<Socks> getAll();
+
+    Collection<Socks> getAllSocks();
 
     Socks removeSocks(int id);
 

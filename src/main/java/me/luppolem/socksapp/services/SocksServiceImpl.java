@@ -48,14 +48,14 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public Collection<Socks> getAll() {
+    public Collection<Socks> getAllSocks() {
         return socksMap.values();
     }
 
     @Override
     public Socks removeSocks(int id) {
         if (!socksMap.containsKey(id)) {
-            throw new NotFoundException("Ингредиент с заданным id Не найден");
+            throw new NotFoundException("Носки с заданным id не найдены");
         }
         Socks removedSocks = socksMap.remove(id);
         saveToFileSocks();

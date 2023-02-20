@@ -14,8 +14,7 @@ public class Warehouse {
 
     @NotEmpty(message = "All fields are mandatory")
    private Socks socks;
-    @Positive
-    private int quantity;
+
 
 
 }
