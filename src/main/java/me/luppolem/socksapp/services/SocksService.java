@@ -1,5 +1,7 @@
 package me.luppolem.socksapp.services;
 
+import me.luppolem.socksapp.model.Color;
+import me.luppolem.socksapp.model.Size;
 import me.luppolem.socksapp.model.Socks;
 
 import java.util.Collection;
@@ -13,7 +15,11 @@ public interface SocksService {
 
     Collection<Socks> getAllSocks();
 
-    Socks removeSocks(int id);
 
-    Socks updateSocks(int id, Socks socks);
+    Socks removeSocks(Socks socks);
+
+
+    boolean updateSocks(Color color, Size size, int cottonPart, int quantity);
+
+    Integer getQuantityOfSocks(Color color, Size size, Integer cottonMin, Integer cottonMax);
 }

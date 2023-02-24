@@ -3,10 +3,11 @@ package me.luppolem.socksapp.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import me.luppolem.socksapp.exception.FileProcessingException;
-import me.luppolem.socksapp.exception.SocksExistsException;
+import me.luppolem.socksapp.model.Color;
+import me.luppolem.socksapp.model.Size;
 import me.luppolem.socksapp.model.Socks;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -16,23 +17,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class SocksServiceImpl implements SocksService {
 
 
     private final FileService fileService;
 
-    public SocksServiceImpl(@Qualifier("socksFileService") FileService fileService) {
-        this.fileService = fileService;
-    }
-
-    private Map<Integer, Socks> socksMap = new HashMap<>();
+    private static Map<Integer, Socks> socksMap = new HashMap<>();
     private static Integer id = 0;
 
     @Override
     public Socks addSocks(Socks socks) {
-        if (socksMap.containsValue(socks)) {
-            throw new SocksExistsException();
-        }
+
         socksMap.put(id++, socks);
         saveToFileSocks();
         return socks;
@@ -53,25 +49,53 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public Socks removeSocks(int id) {
-        if (!socksMap.containsKey(id)) {
-            throw new NotFoundException("Носки с заданным id не найдены");
+    public Socks removeSocks(Socks socks) {
+        if (!socksMap.containsValue(socks)) {
+            throw new NotFoundException("Носки с заданными атрибутами не найдены");
         }
-        Socks removedSocks = socksMap.remove(id);
+
+        Socks removedSocks = socksMap.remove(socks);
+
         saveToFileSocks();
         return removedSocks;
     }
 
 
+
     @Override
-    public Socks updateSocks(int id, Socks socks) {
-        if (!socksMap.containsKey(id)) {
-            throw new NotFoundException("Носки с заданным id не найдены");
+    public boolean updateSocks(Color color, Size size, int cottonPart, int quantity) {
+
+
+        for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
+            if (entry.getValue().getColor().equals(color) &&
+                    entry.getValue().getSize().equals(size) &&
+                    entry.getValue().getCottonPart() == cottonPart &&
+                    entry.getValue().getQuantity() >= quantity) {
+                Socks socks = socksMap.put(id, new Socks(color, size, cottonPart,
+                        entry.getValue().getQuantity() - quantity));
+                saveToFileSocks();
+                return true;
+            }
+            throw new NotFoundException("Носки с заданными атрибутами не удалось списать со склада");
         }
-        socksMap.put(id, socks);
-        saveToFileSocks();
-        return socks;
+        return false;
     }
+
+
+    @Override
+    public Integer getQuantityOfSocks(Color color, Size size, Integer cottonMin, Integer cottonMax) {
+        int quantityOfSocks = 0;
+        for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
+            if (entry.getValue().getColor().equals(color) &&
+                    entry.getValue().getSize().equals(size) &&
+                    (cottonMin <= entry.getValue().getCottonPart() &&
+                            (cottonMax >= entry.getValue().getCottonPart()))) {
+                quantityOfSocks += entry.getValue().getQuantity();
+            }
+        }
+        return quantityOfSocks;
+    }
+
 
     @PostConstruct
     private void initSocks() throws FileProcessingException {

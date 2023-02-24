@@ -1,6 +1,6 @@
 package me.luppolem.socksapp.services;
 
-import me.luppolem.socksapp.model.Warehouse;
+import me.luppolem.socksapp.model.Socks;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +22,9 @@ public interface FileService {
     InputStreamResource exportFile() throws FileNotFoundException;
 
 
-    InputStreamResource exportTxtFile(Map<Integer, Warehouse> warehouseMap) throws FileNotFoundException, IOException;
+    InputStreamResource exportTxtFile(Map<Integer, Socks> socksMap) throws FileNotFoundException, IOException;
+
+
 
     void importFile(MultipartFile file) throws FileNotFoundException;
 

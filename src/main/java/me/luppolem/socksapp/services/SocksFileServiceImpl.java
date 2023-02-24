@@ -1,7 +1,7 @@
 package me.luppolem.socksapp.services;
 
 import me.luppolem.socksapp.exception.FileProcessingException;
-import me.luppolem.socksapp.model.Warehouse;
+import me.luppolem.socksapp.model.Socks;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -79,7 +79,7 @@ public class SocksFileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStreamResource exportTxtFile(Map<Integer, Warehouse> recipeMap) throws FileNotFoundException, IOException {
+    public InputStreamResource exportTxtFile(Map<Integer, Socks> socksMap) throws FileNotFoundException, IOException {
         return null;
     }
 

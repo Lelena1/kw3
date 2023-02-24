@@ -17,6 +17,6 @@ public class Socks {
     private Size size;
     @Positive
     private int cottonPart;
-
-
+    @Positive
+    private int quantity;
 }

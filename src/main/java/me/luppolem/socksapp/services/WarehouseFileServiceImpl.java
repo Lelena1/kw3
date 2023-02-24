@@ -1,7 +1,7 @@
 package me.luppolem.socksapp.services;
 
 import me.luppolem.socksapp.exception.FileProcessingException;
-import me.luppolem.socksapp.model.Warehouse;
+import me.luppolem.socksapp.model.Socks;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -20,15 +20,15 @@ public class WarehouseFileServiceImpl implements FileService {
 
 
     @Value("${path.to.files}")
-    private String dataFilePathWarehouse;
-    @Value("${name.of.warehouse.file}")
-    private String dataFileNameWarehouse;
+    private String dataFilePathSocks;
+    @Value("${name.of.socks.file}")
+    private String dataFileNameSocks;
 
     private Path path;
 
     @PostConstruct
     private void init() {
-        path = Path.of(dataFilePathWarehouse, dataFileNameWarehouse);
+        path = Path.of(dataFilePathSocks, dataFileNameSocks);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class WarehouseFileServiceImpl implements FileService {
 
     @Override
     public File getDataFile() {
-        return new File(dataFilePathWarehouse + "/" + dataFileNameWarehouse);
+        return new File(dataFilePathSocks + "/" + dataFileNameSocks);
     }
 
 
@@ -80,19 +80,19 @@ public class WarehouseFileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStreamResource exportTxtFile(Map<Integer, Warehouse> warehouseMap) throws FileNotFoundException, IOException {
-        Path path = this.createAllWarehouseFile("allWarehouse");
-        for (Warehouse warehouse : warehouseMap.values()) {
+    public InputStreamResource exportTxtFile(Map<Integer, Socks> socksMap) throws FileNotFoundException, IOException {
+        Path path = this.createAllSocksFile("allSocks");
+        for (Socks socks : socksMap.values()) {
             try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
                 writer.append(" Цвет носков: ");
-                writer.append(String.valueOf(warehouse.getSocks().getColor()));
+                writer.append(String.valueOf(socks.getColor()));
                 writer.append("\n Размер носков: ");
-                writer.append(String.valueOf(warehouse.getSocks().getSize()));
+                writer.append(String.valueOf(socks.getSize()));
                 writer.append(" ");
                 writer.append("\n Процентное содержание хлопка: ");
-                writer.append(String.valueOf(warehouse.getSocks().getCottonPart()));
+                writer.append(String.valueOf(socks.getCottonPart()));
                 writer.append("\n Количество носков: ");
-                writer.append(String.valueOf(warehouse.getQuantity()));
+                writer.append(String.valueOf(socks.getQuantity()));
             }
         }
 
@@ -101,13 +101,13 @@ public class WarehouseFileServiceImpl implements FileService {
     }
 
 
-    private Path createAllWarehouseFile(String suffix) throws IOException {
-        if (Files.exists(Path.of(dataFilePathWarehouse, suffix))) {
-            Files.delete(Path.of(dataFilePathWarehouse, suffix));
-            Files.createFile(Path.of(dataFilePathWarehouse, suffix));
-            return Path.of(dataFilePathWarehouse, suffix);
+    private Path createAllSocksFile(String suffix) throws IOException {
+        if (Files.exists(Path.of(dataFilePathSocks, suffix))) {
+            Files.delete(Path.of(dataFilePathSocks, suffix));
+            Files.createFile(Path.of(dataFilePathSocks, suffix));
+            return Path.of(dataFilePathSocks, suffix);
         }
-        return Files.createFile(Path.of(dataFilePathWarehouse, suffix));
+        return Files.createFile(Path.of(dataFilePathSocks, suffix));
     }
 
     @Override
