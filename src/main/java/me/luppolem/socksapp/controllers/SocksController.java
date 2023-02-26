@@ -26,11 +26,10 @@ import javax.validation.Valid;
 public class SocksController {
     private final SocksService socksService;
 
-
     @PostMapping
     @Operation(
             summary = "Приход носков на склад",
-            description = "Носки добавляются на склад путем заполнения пяти полей json-файла"
+            description = "Носки добавляются на склад путем заполнения полей json-файла"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -51,7 +50,6 @@ public class SocksController {
             @ApiResponse(
                     responseCode = "500",
                     description = "Произошла ошибка, не зависящая от вызывающей стороны"
-
             )
 
     })
@@ -60,51 +58,50 @@ public class SocksController {
         return ResponseEntity.ok(socksService.addSocks(socks));
     }
 
-//    @PutMapping
-//    @Operation(
-//            summary = "Отпуск носков со склада",
-//            description = "Носки отпускаются со склада путем введения полей json-файла"
-//    )
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200",
-//                    description = "Носки успешно отпущены сос склада",
-//                    content = {
-//                            @Content(
-//                                    mediaType = "application/json",
-//                                    schema = @Schema(implementation = Socks.class)
-//                            )
-//                    }
-//            ),
-//            @ApiResponse(
-//                    responseCode = "400",
-//                    description = "Товара нет на складе в нужном количестве или параметры запроса имеют некорректный формат"
-//
-//            ),
-//            @ApiResponse(
-//                    responseCode = "500",
-//                    description = "Произошла ошибка, не зависящая от вызывающей стороны"
-//
-//            )
-//    })
-//    ResponseEntity<Object> releaseOfSocks(@Valid @RequestBody Socks socks) {
-//        return ResponseEntity.ok(socksService.updateSocks(socks));
-//    }
+    @PutMapping
+    @Operation(
+            summary = "Отпуск носков со склада",
+            description = "Носки отпускаются со склада путем введения полей json-файла"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Носки успешно отпущены со склада",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Socks.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Товара нет на складе в нужном количестве или параметры запроса имеют некорректный формат"
+
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Произошла ошибка, не зависящая от вызывающей стороны"
+
+            )
+    })
+    ResponseEntity<Object> releaseOfSocks(@Valid @RequestBody Socks socks) {
+        return ResponseEntity.ok(socksService.updateSocks(socks.getColor(), socks.getSize(), socks.getCottonPart(), socks.getQuantity()));
+    }
 
     @GetMapping
     @Operation(
             summary = "Получение информации о количестве носков по атрибутам: цвет, размер, " +
                     "минимальный и максимальный уровень хлопка",
             description = "Информацию о количестве носков можно получить путем ввода одного или нескольких " +
-                    "атрибутов - цвета, размера - числового значение от 36.0 до 39.0 с шагом 0.5," +
-                    "а также минимального и максимального уровня хлопка - целого числа от 0 до 100"
+                    "атрибутов - цвета, размера, а также минимального и максимального уровня хлопка - целого числа от 0 до 100"
     )
     @Parameters(value = {
             @Parameter(
                     name = "color", example = "Белый"
             ),
             @Parameter(
-                    name = "size", example = "36.5"
+                    name = "size", example = "L"
             ),
             @Parameter(
                     name = "cottonMin", example = "10"
@@ -131,12 +128,43 @@ public class SocksController {
     })
     public Integer getQuantityOfSocks(@RequestParam(required = false) Color color,
                                       @RequestParam(required = false) Size size,
-                                      @RequestParam(required = false) Integer cottonMin,
-                                      @RequestParam(required = false) Integer cottonMax
+                                      @RequestParam(required = true) Integer cottonMin,
+                                      @RequestParam(required = true) Integer cottonMax
     ) {
 
         return socksService.getQuantityOfSocks(color, size, cottonMin, cottonMax);
     }
 
+    @DeleteMapping
+    @Operation(
+            summary = "Регистрация списания бракованных носков",
+            description = "Брак списывается со склада путем введения полей json-файла носков"
+    )
+
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Запрос выполнен. Брак успешно списан со склада",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Socks.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "параметры запроса отсутствуют или имеют некорректный формат"
+
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Произошла ошибка, не зависящая от вызывающей стороны"
+
+            )
+    })
+    public void deleteDefectiveSocks(@Valid @RequestBody Socks socks) {
+        socksService.removeDefectiveSocks(socks.getColor(), socks.getSize(), socks.getCottonPart(), socks.getQuantity());
+    }
 
 }

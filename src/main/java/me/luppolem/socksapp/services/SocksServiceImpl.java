@@ -22,18 +22,18 @@ public class SocksServiceImpl implements SocksService {
 
 
     private final FileService fileService;
-
     private static Map<Integer, Socks> socksMap = new HashMap<>();
     private static Integer id = 0;
 
+
     @Override
     public Socks addSocks(Socks socks) {
+
 
         socksMap.put(id++, socks);
         saveToFileSocks();
         return socks;
     }
-
 
     @Override
     public Socks getSocks(Integer id) {
@@ -49,17 +49,28 @@ public class SocksServiceImpl implements SocksService {
     }
 
     @Override
-    public Socks removeSocks(Socks socks) {
-        if (!socksMap.containsValue(socks)) {
-            throw new NotFoundException("Носки с заданными атрибутами не найдены");
-        }
-
-        Socks removedSocks = socksMap.remove(socks);
-
-        saveToFileSocks();
-        return removedSocks;
+    public Map<Integer, Socks> getSocksMap() {
+        return socksMap;
     }
 
+
+    @Override
+    public void removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity) {
+
+        for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
+            if (entry.getValue().getColor().equals(color) &&
+                    entry.getValue().getSize().equals(size) &&
+                    entry.getValue().getCottonPart() == cottonPart &&
+                    entry.getValue().getQuantity() >= quantity) {
+                socksMap.put(id, new Socks(color, size, cottonPart,
+                        entry.getValue().getQuantity() - quantity));
+                saveToFileSocks();
+
+            }
+            throw new NotFoundException("Бракованные носки с заданными атрибутами не найдены на складе");
+        }
+
+    }
 
 
     @Override
@@ -71,13 +82,15 @@ public class SocksServiceImpl implements SocksService {
                     entry.getValue().getSize().equals(size) &&
                     entry.getValue().getCottonPart() == cottonPart &&
                     entry.getValue().getQuantity() >= quantity) {
-                Socks socks = socksMap.put(id, new Socks(color, size, cottonPart,
+                socksMap.put(id, new Socks(color, size, cottonPart,
                         entry.getValue().getQuantity() - quantity));
                 saveToFileSocks();
                 return true;
             }
             throw new NotFoundException("Носки с заданными атрибутами не удалось списать со склада");
+
         }
+
         return false;
     }
 

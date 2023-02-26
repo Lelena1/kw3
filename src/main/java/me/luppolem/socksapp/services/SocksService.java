@@ -5,6 +5,7 @@ import me.luppolem.socksapp.model.Size;
 import me.luppolem.socksapp.model.Socks;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface SocksService {
 
@@ -15,9 +16,10 @@ public interface SocksService {
 
     Collection<Socks> getAllSocks();
 
+    Map<Integer, Socks> getSocksMap();
 
-    Socks removeSocks(Socks socks);
 
+    void removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity);
 
     boolean updateSocks(Color color, Size size, int cottonPart, int quantity);
 

@@ -25,9 +25,7 @@ public interface FileService {
     InputStreamResource exportTxtFile(Map<Integer, Socks> socksMap) throws FileNotFoundException, IOException;
 
 
-
     void importFile(MultipartFile file) throws FileNotFoundException;
-
 
 
     Path getPath();
