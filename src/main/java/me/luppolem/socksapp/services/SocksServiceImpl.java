@@ -27,12 +27,15 @@ public class SocksServiceImpl implements SocksService {
 
 
     @Override
-    public Socks addSocks(Socks socks) {
+    public void addSocks(Color color, Size size, int cottonPart, int quantity) {
 
-
-        socksMap.put(id++, socks);
+        Socks socks = new Socks(color, size, cottonPart, quantity);
+        if (socks.getColor().equals(color) && socks.getSize().equals(size) && socks.getCottonPart() == cottonPart) {
+            socksMap.put(id, new Socks(socks.getColor(), socks.getSize(), socks.getCottonPart(), socks.getQuantity() + quantity));
+        } else {
+            socksMap.put(id++, new Socks(color, size, cottonPart, quantity));
+        }
         saveToFileSocks();
-        return socks;
     }
 
     @Override
@@ -53,22 +56,24 @@ public class SocksServiceImpl implements SocksService {
         return socksMap;
     }
 
-
     @Override
-    public void removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity) {
+    public boolean removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity) {
 
         for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
             if (entry.getValue().getColor().equals(color) &&
                     entry.getValue().getSize().equals(size) &&
                     entry.getValue().getCottonPart() == cottonPart &&
                     entry.getValue().getQuantity() >= quantity) {
+
                 socksMap.put(id, new Socks(color, size, cottonPart,
                         entry.getValue().getQuantity() - quantity));
-                saveToFileSocks();
 
             }
-            throw new NotFoundException("Бракованные носки с заданными атрибутами не найдены на складе");
+            saveToFileSocks();
+            return true;
         }
+
+        throw new NotFoundException("Бракованные носки с заданными атрибутами не найдены на складе");
 
     }
 
@@ -76,7 +81,6 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public boolean updateSocks(Color color, Size size, int cottonPart, int quantity) {
 
-
         for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
             if (entry.getValue().getColor().equals(color) &&
                     entry.getValue().getSize().equals(size) &&
@@ -84,16 +88,14 @@ public class SocksServiceImpl implements SocksService {
                     entry.getValue().getQuantity() >= quantity) {
                 socksMap.put(id, new Socks(color, size, cottonPart,
                         entry.getValue().getQuantity() - quantity));
-                saveToFileSocks();
-                return true;
+
             }
-            throw new NotFoundException("Носки с заданными атрибутами не удалось списать со склада");
-
+            saveToFileSocks();
+            return true;
         }
+        throw new NotFoundException("Носки с заданными атрибутами не удалось списать со склада");
 
-        return false;
     }
-
 
     @Override
     public Integer getQuantityOfSocks(Color color, Size size, Integer cottonMin, Integer cottonMax) {

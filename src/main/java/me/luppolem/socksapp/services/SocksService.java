@@ -9,7 +9,8 @@ import java.util.Map;
 
 public interface SocksService {
 
-    Socks addSocks(Socks socks);
+
+    void addSocks(Color color, Size size, int cottonPart, int quantity);
 
     Socks getSocks(Integer id);
 
@@ -19,7 +20,7 @@ public interface SocksService {
     Map<Integer, Socks> getSocksMap();
 
 
-    void removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity);
+    boolean removeDefectiveSocks(Color color, Size size, int cottonPart, int quantity);
 
     boolean updateSocks(Color color, Size size, int cottonPart, int quantity);
 

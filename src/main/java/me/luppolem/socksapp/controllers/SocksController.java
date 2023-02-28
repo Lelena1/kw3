@@ -53,9 +53,10 @@ public class SocksController {
             )
 
     })
-    public ResponseEntity<Socks> registerSocksInWarehouse(@Valid @RequestBody Socks socks) {
+    public void registerSocksInWarehouse(@Valid @RequestBody Socks socks) {
 
-        return ResponseEntity.ok(socksService.addSocks(socks));
+        socksService.addSocks(socks.getColor(), socks.getSize(), socks.getCottonPart(),
+                socks.getQuantity());
     }
 
     @PutMapping
@@ -126,8 +127,8 @@ public class SocksController {
 
             )
     })
-    public Integer getQuantityOfSocks(@RequestParam(required = false) Color color,
-                                      @RequestParam(required = false) Size size,
+    public Integer getQuantityOfSocks(@RequestParam(required = true) Color color,
+                                      @RequestParam(required = true) Size size,
                                       @RequestParam(required = true) Integer cottonMin,
                                       @RequestParam(required = true) Integer cottonMax
     ) {
@@ -163,8 +164,10 @@ public class SocksController {
 
             )
     })
-    public void deleteDefectiveSocks(@Valid @RequestBody Socks socks) {
+    public boolean deleteDefectiveSocks(@Valid @RequestBody Socks socks) {
         socksService.removeDefectiveSocks(socks.getColor(), socks.getSize(), socks.getCottonPart(), socks.getQuantity());
+        return true;
     }
+
 
 }
