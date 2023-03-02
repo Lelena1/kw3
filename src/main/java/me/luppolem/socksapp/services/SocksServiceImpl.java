@@ -29,16 +29,22 @@ public class SocksServiceImpl implements SocksService {
     @Override
     public void addSocks(Color color, Size size, int cottonPart, int quantity) {
 
-        for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
-            if (entry.getValue().getColor().equals(color) &&
-                    entry.getValue().getSize().equals(size) &&
-                    entry.getValue().getCottonPart() == cottonPart) {
-                socksMap.put(id, new Socks(color, size, cottonPart,
-                        entry.getValue().getQuantity() + quantity));
+        Socks socks = new Socks(color, size, cottonPart, quantity);
+        if (socksMap.containsValue(socks)) {
+
+            for (Map.Entry<Integer, Socks> entry : socksMap.entrySet()) {
+                if (entry.getValue().getColor().equals(color) &&
+                        entry.getValue().getSize().equals(size) &&
+                        entry.getValue().getCottonPart() == cottonPart) {
+                    socksMap.put(id, new Socks(color, size, cottonPart,
+                            entry.getValue().getQuantity() + quantity));
+                }
             }
+            saveToFileSocks();
+        } else {
+            socksMap.put(id++, new Socks(color, size, cottonPart, quantity));
+            saveToFileSocks();
         }
-        socksMap.put(id++, new Socks(color, size, cottonPart, quantity));
-        saveToFileSocks();
     }
 
     @Override
